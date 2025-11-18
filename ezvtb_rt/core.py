@@ -2,6 +2,7 @@ from ezvtb_rt.trt_utils import *
 from ezvtb_rt.rife import RIFE
 from ezvtb_rt.tha import THA
 from ezvtb_rt.tha4 import THA4
+from ezvtb_rt.tha4_student import THA4Student
 from ezvtb_rt.cache import Cacher
 from ezvtb_rt.sr import SR
 from ezvtb_rt.common import Core
@@ -24,7 +25,8 @@ class CoreTRT(Core):
     def __init__(self, 
                  tha_model_version:str = 'v3',
                  tha_model_seperable:bool = True,
-                 tha_model_fp16:bool = False, 
+                 tha_model_fp16:bool = False,
+                 tha_model_name:str = None,
                  rife_model_enable:bool = False,
                  rife_model_scale:int = 2,
                  rife_model_fp16:bool = False,
@@ -43,6 +45,22 @@ class CoreTRT(Core):
         elif tha_model_version == 'v4':
             tha_path = os.path.join(ezvtb_rt.EZVTB_DATA, 'tha4', 
                                     'fp16' if tha_model_fp16 else 'fp32')
+            self.v3 = False
+        elif tha_model_version == 'v4_student':
+            # Support custom student models in data/models/custom_tha4_models
+            if tha_model_name:
+                # Build path relative to project root (parent of ezvtuber-rt)
+                project_root = os.path.dirname(
+                    os.path.dirname(os.path.dirname(__file__))
+                )
+                tha_path = os.path.normpath(os.path.join(
+                    project_root, 'data', 'models',
+                    'custom_tha4_models', tha_model_name
+                ))
+            else:
+                tha_path = os.path.join(
+                    ezvtb_rt.EZVTB_DATA, 'tha4_student'
+                )
             self.v3 = False
         else:
             raise ValueError('Unsupported THA model version')
@@ -64,10 +82,11 @@ class CoreTRT(Core):
                     sr_path = os.path.join(ezvtb_rt.EZVTB_DATA, 'waifu2x_upconv', 'fp16', 'upconv_7', 'art', f'noise{sr_model_noise}_scale2x')
                 else:
                     sr_path = os.path.join(ezvtb_rt.EZVTB_DATA, 'waifu2x_upconv', 'fp32', 'upconv_7', 'art', f'noise{sr_model_noise}_scale2x')
-
         # Initialize core THA face model
         if self.v3:
             self.tha = THA(tha_path, vram_cache_size, use_eyebrow)
+        elif tha_model_version == 'v4_student':
+            self.tha = THA4Student(tha_path)
         else:
             self.tha = THA4(tha_path, vram_cache_size, use_eyebrow)
 
