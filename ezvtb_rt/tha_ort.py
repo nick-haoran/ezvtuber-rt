@@ -82,10 +82,7 @@ class THAORT:
             self.seperable = False 
 
         avaliales = ort.get_available_providers()
-        if 'CUDAExecutionProvider' in avaliales:
-            self.provider = 'CUDAExecutionProvider'
-            self.device = 'cuda'
-        elif 'DmlExecutionProvider' in avaliales:
+        if 'DmlExecutionProvider' in avaliales:
             self.provider = 'DmlExecutionProvider'
             self.device = 'dml'
         else:
@@ -187,10 +184,7 @@ class THAORTNonDefault:
             self.seperable = False 
 
         avaliales = ort.get_available_providers()
-        if 'CUDAExecutionProvider' in avaliales:
-            self.provider = 'CUDAExecutionProvider'
-            self.device = 'cuda'
-        elif 'DmlExecutionProvider' in avaliales:
+        if 'DmlExecutionProvider' in avaliales:
             self.provider = 'DmlExecutionProvider'
             self.device = 'dml'
         else:

@@ -5,10 +5,7 @@ from typing import List
 class SRORT:
     def __init__(self, model_dir:str, device_id:int):
         avaliales = ort.get_available_providers()
-        if 'CUDAExecutionProvider' in avaliales:
-            self.provider = 'CUDAExecutionProvider'
-            self.device = 'cuda'
-        elif 'DmlExecutionProvider' in avaliales:
+        if 'DmlExecutionProvider' in avaliales:
             self.provider = 'DmlExecutionProvider'
             self.device = 'dml'
         else:

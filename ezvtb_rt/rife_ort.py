@@ -15,10 +15,7 @@ class RIFEORT:
             raise ValueError('can not determine scale')
 
         avaliales = ort.get_available_providers()
-        if 'CUDAExecutionProvider' in avaliales:
-            self.provider = 'CUDAExecutionProvider'
-            self.device = 'cuda'
-        elif 'DmlExecutionProvider' in avaliales:
+        if 'DmlExecutionProvider' in avaliales:
             self.provider = 'DmlExecutionProvider'
             self.device = 'dml'
         else:

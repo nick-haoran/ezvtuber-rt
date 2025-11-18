@@ -65,7 +65,7 @@ def merge_graph_tha4(tha4_dir: str, use_eyebrow: bool = True):
 class THA4ORT:
     """THA4 ONNX Runtime implementation for default device (device_id=0)
     
-    Uses ONNX Runtime with GPU acceleration (CUDA or DirectML) for inference.
+    Uses ONNX Runtime with GPU acceleration (DirectML) for inference.
     Supports eyebrow processing and maintains intermediate results on GPU.
     """
     def __init__(self, tha4_dir: str, use_eyebrow: bool = True):
@@ -83,10 +83,7 @@ class THA4ORT:
         
         # Check for available GPU providers
         available = ort.get_available_providers()
-        if 'CUDAExecutionProvider' in available:
-            self.provider = 'CUDAExecutionProvider'
-            self.device = 'cuda'
-        elif 'DmlExecutionProvider' in available:
+        if 'DmlExecutionProvider' in available:
             self.provider = 'DmlExecutionProvider'
             self.device = 'dml'
         else:
@@ -230,9 +227,7 @@ class THA4ORTNonDefault:
             self.dtype = np.float32
         
         available = ort.get_available_providers()
-        if 'CUDAExecutionProvider' in available:
-            self.provider = ('CUDAExecutionProvider', {'device_id': device_id})
-        elif 'DmlExecutionProvider' in available:
+        if 'DmlExecutionProvider' in available:
             self.provider = ('DmlExecutionProvider', {'device_id': device_id})
         else:
             raise ValueError('No GPU provider available')
